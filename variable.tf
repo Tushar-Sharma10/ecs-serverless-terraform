@@ -27,3 +27,31 @@ variable "target_type" {
   type        = string
   default     = "ip"
 }
+
+variable "encrypted" {
+  description = "If true the disk will be encrypted"
+  type        = bool
+  default     = true
+}
+
+variable "performance_mode" {
+  description = "File system performace mode for EFS"
+  type        = string
+  default     = "generalPurpose"
+  validation {
+    condition     = var.performance_mode == "generalPurpose" || var.performance_mode == "maxIO"
+    error_message = "Performance must be either 'generalPurpose' or 'maxIO'"
+  }
+}
+
+variable "creation_token" {
+  description = "A unique name"
+  type        = string
+  default     = "my-efs"
+}
+
+variable "transition_to_ia" {
+  description = "Indicates how long it takes to transition files to the IA storage class"
+  type        = string
+  default     = "AFTER_30_DAYS"
+}
