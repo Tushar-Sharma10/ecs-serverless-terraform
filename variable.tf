@@ -39,7 +39,7 @@ variable "performance_mode" {
   type        = string
   default     = "generalPurpose"
   validation {
-    condition     = var.performance_mode == "generalPurpose" || var.performance_mode == "maxIO"
+    condition     = contains(["generalPurpose", "maxIO"], var.performance_mode)
     error_message = "Performance must be either 'generalPurpose' or 'maxIO'"
   }
 }
@@ -54,4 +54,69 @@ variable "transition_to_ia" {
   description = "Indicates how long it takes to transition files to the IA storage class"
   type        = string
   default     = "AFTER_30_DAYS"
+}
+
+# ECS CLUSTER
+variable "cluster_name" {
+  description = "Name of the cluster"
+  type        = string
+  default     = "ecs_cluster"
+}
+
+variable "setting_name" {
+  description = "Name of the settings to manage"
+  type        = string
+  default     = "containerInsights"
+
+  validation {
+    condition     = var.setting_name == "containerInsights"
+    error_message = "Settings name can only be 'containerInsights'"
+  }
+}
+
+variable "setting_value" {
+  description = "value to assign to settings"
+  type        = string
+  default     = "enabled"
+
+  validation {
+    condition     = contains(["enhanced", "enabled", "disabled"], var.setting_value)
+    error_message = "Settings value should be ony from these(enhanced, enabled,disabled)"
+  }
+}
+
+variable "region" {
+  description = "Region for container"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "requires_compatibilities" {
+  description = "Launch type for ECS task definition"
+  type        = string
+  default     = "FARGATE"
+
+  validation {
+    condition     = contains(["FARGATE", "EC2"], var.requires_compatibilities)
+    error_message = "Required compatabilites must be either 'FARGATE' or 'EC2'."
+  }
+}
+
+variable "skip_destroy" {
+  description = "Whether to retain the old revision when the resource is destroyed"
+  type        = bool
+  default     = false
+}
+
+variable "track_latest" {
+  description = "To track the latest revision or update"
+  type        = bool
+  default     = false
+}
+
+variable "volume_name" {
+  description = "Name of the volume"
+  type        = string
+  default     = "EFSvolume"
+
 }
