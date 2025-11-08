@@ -52,11 +52,12 @@ resource "aws_ecs_task_definition" "task_definition" {
     }
   ])
   requires_compatibilities = [var.requires_compatibilities]
-  cpu                      = "100"
-  memory                   = "100"
+  cpu                      = var.cpu
+  memory                   = var.memory
   network_mode             = "awsvpc"
   skip_destroy             = var.skip_destroy
   track_latest             = var.track_latest
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   runtime_platform {
     operating_system_family = "LINUX"
@@ -70,5 +71,34 @@ resource "aws_ecs_task_definition" "task_definition" {
       transit_encryption      = "ENABLED"
       transit_encryption_port = 2049
     }
+  }
+}
+
+resource "aws_ecs_service" "ecs_service" {
+  name                               = "ecs_service"
+  cluster                            = aws_ecs_cluster.ecs_cluster.arn
+  availability_zone_rebalancing      = "ENABLED"
+  deployment_maximum_percent         = var.max_percent # FOR ZERO DOWNTIME
+  deployment_minimum_healthy_percent = var.min_percent  # AND FOR ROLLING UPDATES
+  desired_count                      = var.desired_count
+  enable_ecs_managed_tags            = true
+  enable_execute_command             = true
+  force_delete                       = true
+  health_check_grace_period_seconds  = var.health_check_grace_period_seconds
+  launch_type                        = var.launch_type # SERVERLESS
+  platform_version                   = var.platform_version
+  propagate_tags                     = "SERVICE" # COPY TAGS FROM THE SERVICE CODE SNIPPET
+  task_definition                    = aws_ecs_task_definition.task_definition.arn
+
+  load_balancer {
+    target_group_arn = module.alb.target_arn
+    container_name   = "Web-Application"
+    container_port   = 8080
+  }
+
+  network_configuration {
+    subnets          = module.vpc.private_subnet_ids
+    security_groups  = [module.security_group.private_sg_id]
+    assign_public_ip = false # FOR PRIVATE 
   }
 }
