@@ -134,36 +134,36 @@ variable "memory" {
 
 variable "launch_type" {
   description = "Launch type"
-  type = string
-  default = "FARGATE"
+  type        = string
+  default     = "FARGATE"
 }
 
 variable "platform_version" {
   description = "Version of platform"
-  type = string
-  default = "LATEST"
+  type        = string
+  default     = "LATEST"
 }
 
 variable "desired_count" {
   description = "Number of instances of the task definition to place and keep running"
-  type = number
-  default = 2
+  type        = number
+  default     = 2
 }
 
 variable "max_percent" {
   description = "Maximum number of tasks that can run during the update"
-  type = number
-  default = 200
+  type        = number
+  default     = 200
 }
 
 variable "min_percent" {
   description = "Minimum number of tasks that must remain running and healthy during update"
-  type = number
-  default = 50
+  type        = number
+  default     = 50
 }
 
 variable "health_check_grace_period_seconds" {
   description = "How long should ecs wait before checking the health of new task after it starts"
-  type = number
-  default = 300
+  type        = number
+  default     = 300
 }

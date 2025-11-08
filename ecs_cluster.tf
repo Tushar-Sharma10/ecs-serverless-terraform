@@ -79,7 +79,7 @@ resource "aws_ecs_service" "ecs_service" {
   cluster                            = aws_ecs_cluster.ecs_cluster.arn
   availability_zone_rebalancing      = "ENABLED"
   deployment_maximum_percent         = var.max_percent # FOR ZERO DOWNTIME
-  deployment_minimum_healthy_percent = var.min_percent  # AND FOR ROLLING UPDATES
+  deployment_minimum_healthy_percent = var.min_percent # AND FOR ROLLING UPDATES
   desired_count                      = var.desired_count
   enable_ecs_managed_tags            = true
   enable_execute_command             = true
