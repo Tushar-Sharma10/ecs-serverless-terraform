@@ -23,5 +23,6 @@ module "alb" {
   environment    = var.environment
   target_type    = var.target_type
   security_group = [module.security_group.public_sg_id]
-  subnets        = module.vpc.public_subnets_ids
+  subnets        = module.vpc.public_subnet_ids
+  bucket_name    = "connection-logs-serverless"
 }

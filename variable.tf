@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Name of the project"
   type        = string
-  default     = "Ecs_Serverless_terraform"
+  default     = "Ecs-Serverless-terraform"
 }
 
 variable "public_cidr" {
