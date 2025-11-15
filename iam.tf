@@ -1,8 +1,8 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole"
   assume_role_policy = jsonencode({
-    version = "2012-10-17"
-    statement = [{
+    Version = "2012-10-17"
+    Statement = [{
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "ecs_cloudwatch_full_access" {
 
 resource "aws_iam_role" "ecs_task_role" {
   name = "ecsTaskAppRole"
-  assume_role_policy = jsondecode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -37,4 +37,9 @@ resource "aws_iam_role" "ecs_task_role" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_role_s3_policy" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
