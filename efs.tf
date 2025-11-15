@@ -26,16 +26,18 @@ resource "aws_security_group" "efs_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_rule" {
-  security_group_id = aws_security_group.efs_sg.id
-  description       = "NFS port"
-  ip_protocol       = "tcp"
-  from_port         = 2049
-  to_port           = 2049
+  security_group_id            = aws_security_group.efs_sg.id
+  description                  = "NFS port"
+  referenced_security_group_id = module.security_group.private_sg_id
+  ip_protocol                  = "tcp"
+  from_port                    = 2049
+  to_port                      = 2049
 }
 
 resource "aws_vpc_security_group_egress_rule" "egress_rule" {
   security_group_id = aws_security_group.efs_sg.id
   ip_protocol       = "-1"
-  from_port         = 0
-  to_port           = 0
+  cidr_ipv4         = "0.0.0.0/0"
+  # from_port         = 0
+  # to_port           = 0
 }
