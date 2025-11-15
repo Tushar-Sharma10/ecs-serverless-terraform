@@ -7,7 +7,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
-  family = "HelloWorld"
+  family = "Web-application"
   container_definitions = jsonencode([
     {
       name      = "Web-application"
@@ -58,10 +58,11 @@ resource "aws_ecs_task_definition" "task_definition" {
   skip_destroy             = var.skip_destroy
   track_latest             = var.track_latest
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture        = "x86_64"
+    cpu_architecture        = "X86_64"
   }
   volume {
     name = var.volume_name
@@ -92,7 +93,7 @@ resource "aws_ecs_service" "ecs_service" {
 
   load_balancer {
     target_group_arn = module.alb.target_arn
-    container_name   = "Web-Application"
+    container_name   = "Web-application"
     container_port   = 8080
   }
 
